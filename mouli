@@ -1,0 +1,71 @@
+#!/bin/python3
+try:
+    import os
+
+    def get_json(token):
+        command = f"curl --location 'https://tekme.eu/api/profile/moulinettes' --header 'Authorization: {token}' > temp.json"
+        os.system(command)
+    
+    def print_all_project_names():
+        os.system("cat temp.json | jq [.jobs[].project]")
+
+    
+    path = f"{os.path.expanduser('~')}/mouli/token.tkn"
+    file = open(path, "r")
+
+    token = file.read()
+
+
+    os.system("clear")
+    get_json(token)
+    print_all_project_names()
+
+    a = input("\nPlease Select a Project: ")
+
+    command = f"cat temp.json | jq '.jobs[] | select(.project==\"{a}\")' > temp2.json"
+
+    os.system("clear")
+
+    os.system(command)
+
+    os.system("echo -----------------------------------")
+
+    os.system("echo -n 'project: ' ; cat temp2.json | jq '.project'")
+    os.system("echo -n 'login: ' ; cat temp2.json | jq '.login'")
+
+    os.system("cat temp2.json | jq .trace.skills[].name > temp3.json")
+
+
+    count = 0
+
+    file = open("temp3.json", "r")
+
+    file = file.read()
+
+    for i in (file):
+        if i == "\n":
+            count += 1
+
+            
+    for i in range(count):
+        command = f"echo -n 'Test Name: '; cat temp2.json | jq .trace.skills[{i}].name"
+        os.system(command)
+        command = f"cat temp2.json | jq .trace.skills[{i}].tests[].comment"
+        os.system(command)
+
+
+    command = f"echo -n 'Date (UTC): '; cat temp2.json | jq .trace.date"
+    os.system(command)
+    
+    command = f"echo -n 'percent: '; cat temp2.json | jq .trace.total_tests_percentage"
+    os.system(command)
+        
+
+    command = f"echo -n 'Ratio: '; cat temp2.json | jq .trace.total_tests_passed | tr '\n' ' '; echo -n '/ '; cat temp2.json | jq .trace.total_tests"
+    os.system(command)
+        
+    os.system("echo -----------------------------------")
+
+    os.system("rm temp*.json")
+except:
+    os.system("rm temp*.json")
