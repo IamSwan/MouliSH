@@ -4,6 +4,7 @@
 
 - Execute ./init.mouli
 - init.sh to enter your token
+- If JQ is not installed, make sure to run install.sh!
 - the mouliSH is ready to use!
 
 ## How to get your token:
